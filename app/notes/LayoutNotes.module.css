@@ -17,3 +17,6 @@
 .notesWrapper {
   width: 100%;
 }
+.notesWrapper {
+  flex: 1;
+}

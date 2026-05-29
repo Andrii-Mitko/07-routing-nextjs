@@ -19,9 +19,6 @@ const Header = () => {
               Notes
             </Link>
           </li>
-          <Link className={css.headerLink} href="/notes/filter/all">
-            Category
-          </Link>
         </ul>
       </nav>
     </header>

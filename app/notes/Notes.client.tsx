@@ -15,7 +15,11 @@ import Pagination from "../../components/Pagination/Pagination";
 import Modal from "../../components/Modal/Modal";
 import NoteForm from "../../components/NoteForm/NoteForm";
 
-export default function NotesClient() {
+type Props = {
+  initialTag?: string;
+};
+
+export default function NotesClient({ initialTag }: Props) {
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -24,14 +28,18 @@ export default function NotesClient() {
     setSearch(value);
     setPage(1);
   }, 300);
+
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["notes", page, search],
+    queryKey: ["notes", page, search, initialTag],
+
     queryFn: () =>
       fetchNotes({
         page,
         perPage: 12,
         search,
+        tag: initialTag === "all" ? undefined : initialTag,
       }),
+
     placeholderData: keepPreviousData,
   });
 
@@ -49,6 +57,7 @@ export default function NotesClient() {
       </button>
 
       {isLoading && <p>Loading...</p>}
+
       {isError && <p>Error loading notes</p>}
 
       {totalPages > 1 && (
@@ -58,7 +67,7 @@ export default function NotesClient() {
       {notes.length > 0 && <NoteList notes={notes} />}
 
       {isModalOpen && (
-        <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        <Modal>
           <NoteForm onClose={() => setIsModalOpen(false)} />
         </Modal>
       )}
