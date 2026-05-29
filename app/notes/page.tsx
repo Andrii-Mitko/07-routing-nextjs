@@ -15,7 +15,7 @@ type Props = {
 };
 
 export default async function Page({ searchParams }: Props) {
-  const params = await searchParams;
+  const params = searchParams;
 
   const page = Number(params.page) || 1;
   const search = params.search || "";

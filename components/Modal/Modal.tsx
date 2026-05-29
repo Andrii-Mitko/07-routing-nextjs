@@ -2,47 +2,41 @@
 
 import { useEffect } from "react";
 import { createPortal } from "react-dom";
+import { useRouter } from "next/navigation";
 import css from "./Modal.module.css";
 
-interface ModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  children: React.ReactNode;
-}
+export default function Modal({ children }: { children: React.ReactNode }) {
+  const router = useRouter();
 
-export default function Modal({ isOpen, onClose, children }: ModalProps) {
-  const modalRoot = document.getElementById("modal-root");
+  const modalRoot =
+    typeof window !== "undefined"
+      ? document.getElementById("modal-root")
+      : null;
 
   useEffect(() => {
-    if (!isOpen) return;
-
-    const handleEsc = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        onClose();
-      }
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === "Escape") router.back();
     };
 
     document.addEventListener("keydown", handleEsc);
-
-    const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
 
     return () => {
       document.removeEventListener("keydown", handleEsc);
-      document.body.style.overflow = prevOverflow;
+      document.body.style.overflow = "auto";
     };
-  }, [isOpen, onClose]);
+  }, [router]);
 
-  if (!isOpen || !modalRoot) return null;
+  if (!modalRoot) return null;
 
-  const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleBackdrop = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
-      onClose();
+      router.back();
     }
   };
 
   return createPortal(
-    <div className={css.backdrop} onClick={handleBackdropClick}>
+    <div className={css.backdrop} onClick={handleBackdrop}>
       <div className={css.modal}>{children}</div>
     </div>,
     modalRoot,

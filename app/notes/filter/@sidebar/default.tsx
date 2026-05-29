@@ -1,5 +1,7 @@
-const NotesSidebar = async () => {
-  return <div>NotesSidebar</div>;
+import NotesSidebar from "@/components/NotesSidebar/NotesSidebar";
+
+const DefaultSidebar = () => {
+  return <NotesSidebar />;
 };
 
-export default NotesSidebar;
+export default DefaultSidebar;

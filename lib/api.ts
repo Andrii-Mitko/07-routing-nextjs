@@ -1,11 +1,13 @@
 import axios from "axios";
 import type { Note, NoteTag } from "../types/note";
 
-axios.defaults.baseURL = "https://notehub-public.goit.study/api";
+axios.defaults.baseURL = "https://next-v1-notes-api.goit.study";
 
 const token = process.env.NEXT_PUBLIC_NOTEHUB_TOKEN;
 
-axios.defaults.headers.common.Authorization = token ? `Bearer ${token}` : "";
+if (token) {
+  axios.defaults.headers.common.Authorization = `Bearer ${token}`;
+}
 
 export interface FetchNotesResponse {
   notes: Note[];
@@ -16,6 +18,7 @@ interface FetchNotesParams {
   page: number;
   perPage: number;
   search?: string;
+  tag?: string;
 }
 
 interface CreateNoteData {
@@ -28,12 +31,14 @@ export const fetchNotes = async ({
   page,
   perPage,
   search,
+  tag,
 }: FetchNotesParams): Promise<FetchNotesResponse> => {
   const { data } = await axios.get<FetchNotesResponse>("/notes", {
     params: {
       page,
       perPage,
       search,
+      tag,
     },
   });
 
@@ -64,7 +69,7 @@ export type Category = {
   updatedAt: string;
 };
 
-export const getCategories = async () => {
-  const res = await axios<Category[]>("/categories");
+export const getCategories = async (): Promise<Category[]> => {
+  const res = await axios.get<Category[]>("/categories");
   return res.data;
 };
