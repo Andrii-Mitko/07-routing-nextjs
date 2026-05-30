@@ -20,6 +20,7 @@ type Props = {
 };
 
 export default function NotesClient({ initialTag }: Props) {
+  console.log("initialTag =", initialTag);
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -32,13 +33,16 @@ export default function NotesClient({ initialTag }: Props) {
   const { data, isLoading, isError } = useQuery({
     queryKey: ["notes", page, search, initialTag],
 
-    queryFn: () =>
-      fetchNotes({
+    queryFn: () => {
+      console.log("tag =", initialTag);
+
+      return fetchNotes({
         page,
         perPage: 12,
         search,
         tag: initialTag === "all" ? undefined : initialTag,
-      }),
+      });
+    },
 
     placeholderData: keepPreviousData,
   });

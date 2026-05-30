@@ -8,13 +8,13 @@ import NotesClient from "../../Notes.client";
 import { fetchNotes } from "@/lib/api";
 
 type Props = {
-  params: {
+  params: Promise<{
     tag: string;
-  };
+  }>;
 };
 
 const FilterPage = async ({ params }: Props) => {
-  const { tag } = params;
+  const { tag } = await params;
 
   const queryClient = new QueryClient();
 
